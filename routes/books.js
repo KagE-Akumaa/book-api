@@ -1,10 +1,10 @@
 import express from "express";
 import pool from "../db.js";
 
-const router = express.Router();
+const booksRouter = express.Router();
 
 // Route to get all the books from the books table from the database
-router.get("/", async (req, res) => {
+booksRouter.get("/", async (req, res) => {
   try {
     const sqlQuery = "SELECT * FROM books";
     // pool.query() has a row field there is the data for the query
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // Route to get a single book based on the id
-router.get("/:id", async (req, res) => {
+booksRouter.get("/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
     // Check the id
@@ -32,7 +32,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Route to add a new book
-router.post("/", async (req, res) => {
+booksRouter.post("/", async (req, res) => {
   try {
     //NOTE: To add a new book what are the data we need from the body ?
     //Ans- title, price, stock, availability, author
@@ -72,7 +72,7 @@ router.post("/", async (req, res) => {
 });
 
 // Route to update price and stock
-router.put("/:id", async (req, res) => {
+booksRouter.put("/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (!id) {
@@ -97,7 +97,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 // Route to delete a book based on id
-router.delete("/:id", async (req, res) => {
+booksRouter.delete("/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (!id) {
@@ -111,4 +111,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-export default router;
+export default booksRouter;
