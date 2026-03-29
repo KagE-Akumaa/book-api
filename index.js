@@ -1,10 +1,10 @@
 import express from "express";
-import pool from "./db.js";
 import dotenv from "dotenv";
+
+dotenv.config();
 import booksRouter from "./routes/books.js";
 import usersRouter from "./routes/users.js";
 
-dotenv.config();
 const app = express();
 app.use(express.json());
 
