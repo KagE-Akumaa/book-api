@@ -1,11 +1,10 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 
-dotenv.config();
 const auth = (req, res, next) => {
   //NOTE: this is the authentication middleware which will check
   //whether the token is valid or not and then if valid will attach to the req.user = decoded
 
+  console.log(process.env.JWT_SECRET);
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ error: "Access Denied!" });

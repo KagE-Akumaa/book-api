@@ -2,6 +2,7 @@ import express from "express";
 import pool from "../db.js";
 
 import auth from "../middlewares/auth.js";
+import requireRole from "../middlewares/authRole.js";
 const booksRouter = express.Router();
 
 // Route to get all the books from the books table from the database
@@ -33,7 +34,7 @@ booksRouter.get("/:id", async (req, res) => {
 });
 
 // Route to add a new book
-booksRouter.post("/", auth, async (req, res) => {
+booksRouter.post("/", auth, requireRole("author"), async (req, res) => {
   try {
     //NOTE: To add a new book what are the data we need from the body ?
     //Ans- title, price, stock, availability, author
@@ -73,7 +74,7 @@ booksRouter.post("/", auth, async (req, res) => {
 });
 
 // Route to update price and stock
-booksRouter.put("/:id", auth, async (req, res) => {
+booksRouter.put("/:id", auth, requireRole("author"), async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (!id) {
@@ -98,7 +99,7 @@ booksRouter.put("/:id", auth, async (req, res) => {
   }
 });
 // Route to delete a book based on id
-booksRouter.delete("/:id", auth, async (req, res) => {
+booksRouter.delete("/:id", auth, requireRole("author"), async (req, res) => {
   try {
     const id = Number(req.params.id);
     if (!id) {
