@@ -1,7 +1,7 @@
-import express from "express";
 import dotenv from "dotenv";
-
 dotenv.config();
+import express from "express";
+
 import booksRouter from "./routes/books.js";
 import usersRouter from "./routes/users.js";
 
@@ -14,4 +14,6 @@ const port = process.env.PORT;
 
 app.listen(port, () => {
   console.log(`App is listening on PORT ${port}`);
+  console.log(process.env.JWT_SECRET);
+  console.log(process.env.DB_USER);
 });
