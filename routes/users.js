@@ -8,8 +8,6 @@ const usersRouter = express.Router();
 
 // get all the users
 usersRouter.get('/', async (req, res) => {
-  console.log(process.env.DB_USER);
-  console.log(process.env.DB_NAME);
   try {
     const sqlQuery = 'SELECT * FROM users';
     const result = await pool.query(sqlQuery);
