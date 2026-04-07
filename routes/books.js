@@ -154,4 +154,40 @@ booksRouter.delete(
   },
 );
 
+// Adding new post route to practice transaction in database
+booksRouter.post('/:id/purchase', auth, async (req, res, next) => {
+  //NOTE: We want to update the book stock if a user purchase a book
+  const client = await pool.connect();
+  try {
+    const id = Number(req.params.id);
+    if (!id) {
+      return next(new AppError('Book id is required!', 400));
+    }
+    await client.query('BEGIN');
+    //NOTE: now the transaction has begun now we want to get the books stock from the books table and decrement it
+    const bookstockQuery = 'SELECT book_stock FROM books WHERE book_id = $1';
+
+    const result = await client.query(bookstockQuery, [id]);
+    //now result.row contains the book_stock update it
+    const { book_stock } = result.rows[0];
+    const newBookStock = book_stock - 1;
+    const newBookStockQuery =
+      'UPDATE books SET book_stock = $1 WHERE book_id = $2 RETURNING *';
+    const stockResult = await client.query(newBookStockQuery, [
+      newBookStock,
+      id,
+    ]);
+    // Now we have to update the purchase in database
+    const purchaseQuery =
+      'INSERT INTO purchases(user_id, book_id, purchased_at) VALUES ($1, $2, $3) RETURNING *';
+    await client.query(purchaseQuery, [req.user.id, id, Date.now()]);
+    await client.query('COMMIT');
+    return res.status(201).json(stockResult.rows[0]);
+  } catch (err) {
+    await client.query('ROLLBACK');
+    next(err);
+  } finally {
+    client.release();
+  }
+});
 export default booksRouter;
